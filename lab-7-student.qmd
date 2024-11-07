@@ -1,9 +1,23 @@
 ---
 title: "Lab 7: Functions + Fish"
-author: "Your name here!"
-format: html
+author: "Alex Lung"
+date: "11/10/2024"
+format: 
+  html:  
+    embed-resources: true
+    code-tools: true
+    toc: true
+    number-sections: true
+    theme: journal
 editor: source
 embed-resources: true
+execute: 
+  echo: true
+  error: true
+code-fold: true
+code-tools: true
+message: false
+warning: false
 ---
 
 The goal of this lab is learn more about exploring missing data and writing
