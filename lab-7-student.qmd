@@ -25,6 +25,10 @@ modular code.
 
 ```{r}
 #| label: setup
+library(tidyverse)
+library(here)
+
+fish <- read.csv(here("data", "BlackfootFish.csv"))
 
 
 ```
@@ -59,12 +63,58 @@ measurement errors.
 ```{r}
 #| label: find-missing-values
 
+fish |>
+  summarise(
+    # Count missing values in each column
+    across(everything(), ~ sum(is.na(.)))) |>
+
+    pivot_longer(everything(), 
+                 names_to = "Variable", 
+                 values_to = "Missing_Values") |>
+  
+    filter(Missing_Values > 0)
 ```
 
 **2. Create ONE thoughtful visualization that explores the frequency of missing values across the different years, sections, and trips.**
 
 ```{r}
 #| label: visual-of-missing-values-over-time
+
+fish |> 
+  
+  filter(is.na(weight)) |>
+  
+  mutate(trip = as.factor(trip)) |>
+  
+  group_by(year, section, trip) |>
+  
+  summarise(Missing_Count = n(), .groups = 'drop') |>
+
+
+  ggplot(aes(x = section, y = Missing_Count, fill = trip)) +
+  
+  geom_bar(stat = "identity") +
+  
+  facet_wrap(~ year, ncol = 5) +
+  
+  labs(
+    title = "Frequency of Missing Weight Values by Year, Section, and Trip",
+    subtitle = "Count of Missing Values",
+    x = "Section",
+    y = "",
+    fill = "Trip"
+  ) +
+  
+  theme_minimal(base_size = 8) +  
+  
+  theme(
+ 
+    strip.text = element_text(size = 12),
+    aspect.ratio = .5
+  ) +
+  
+  scale_fill_manual(values = c("blue", "lightblue"))
+
 
 ```
 
