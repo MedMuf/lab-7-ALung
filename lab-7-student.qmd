@@ -105,15 +105,16 @@ fish |>
     fill = "Trip"
   ) +
   
-  theme_minimal(base_size = 8) +  
+  theme_bw(base_size = 8) +  
   
   theme(
- 
     strip.text = element_text(size = 12),
-    aspect.ratio = .5
+    aspect.ratio = 0.6,
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank()
   ) +
   
-  scale_fill_manual(values = c("blue", "lightblue"))
+  scale_fill_manual(values = c("cyan2", "darkcyan"))
 
 
 ```
