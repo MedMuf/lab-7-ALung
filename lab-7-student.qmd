@@ -149,6 +149,7 @@ understand the intent of the process. *Additionally, it can make it very difficu
 
 **3. What is the mistake I made in the above rescaling code?**
 
+*This mistake in the code chunk above is for the mutating of the weight variable, where the subtracting of the denominator has the function "min(length, na.rm = TRUE)", which should be "min(weight, na.rm = TRUE)" as we are scaling for weight.*
 
 When you find yourself copy-pasting lines of code, it's time to write a
 function, instead!
