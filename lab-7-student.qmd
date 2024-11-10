@@ -260,6 +260,14 @@ If you are struggling with this task, I recommend looking back over the [data fr
 ```{r}
 #| label: rescale-data-frame-function
 
+rescale_column <- function(df, columns) {
+ 
+  df <- df |> 
+    mutate(across({{columns}}, rescale_01))
+  
+  return(df)
+}
+
 ```
 
 **9. Use your `rescale_column()` function to rescale *both* the `length` and `weight` columns.**
@@ -270,5 +278,6 @@ I expect that you carry out this process by calling the `rescale_column()` funct
 
 ```{r}
 #| label: rescale-two-columns
+rescale_column(fish, c(length, weight))
 
 ```
