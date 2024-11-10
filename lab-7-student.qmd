@@ -26,7 +26,7 @@ The goal of this lab is learn more about exploring missing data and writing modu
 #| label: setup
 library(tidyverse)
 library(here)
-
+ 
 fish <- read.csv(here("data", "BlackfootFish.csv"))
 
 
