@@ -65,7 +65,9 @@ If you are struggling with the structure of your function, I would suggest readi
 
 replace_unlikely_values <- function(measurements, min_value, max_value) {
   
-  measurements <- ifelse(measurements < min_value | measurements > max_value, NA, measurements)
+  measurements <- ifelse(measurements < min_value | measurements > max_value, 
+                         NA, 
+                         measurements)
   
   return(measurements)
   
@@ -100,14 +102,14 @@ dataset and variable names as inputs)!
 
 condition_index <- function(weight, length) {
   
-  if (any(weight <= 0, length <= 0)) {
+  # Check for any zero or negative values (after removing NAs)
+  if (any(weight <= 0 | length <= 0, na.rm = TRUE)) {
     stop("Weight and length must be positive values.")
   }
   
-  index <- (weight / (length^3)) * 100000
-  return(index)
+  # Calculate condition index 
+  return((weight / (length^3)) * 100000)
 }
-
 ```
 
 **4. Make a thoughtful visualization of how fish conditions have varied over the duration of this study.**
@@ -121,16 +123,17 @@ condition_index <- function(weight, length) {
 ```{r}
 #| label: condition-indices-over-time
 
+
 fish |> 
   mutate(condition = condition_index(weight, length)) |>
-  
-  ggplot(aes(x = year, y = condition, color = species)) + 
-  geom_point(alpha = 0.6) +
-  geom_smooth(method = "loess", se = FALSE) +
+  ggplot(aes(x = year, y = condition)) + 
+  geom_point(alpha = 0.25) +
+  facet_wrap(~ species) +
   labs(
     x = "Year",
-    y = "Condition Index",
-    title = "Variation in Fish Condition Index Over Time",
+    y = "",
+    title = "Variation in Fish Condition Index of Various Species Over Time",
+    subtitle = "Condition Index",
     color = "Species"
   ) +
   theme_bw()
