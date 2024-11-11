@@ -7,8 +7,6 @@ format:
   html:  
     embed-resources: true
     code-tools: true
-    toc: true
-    number-sections: true
     theme: journal
 editor: source
 embed-resources: true
@@ -44,6 +42,8 @@ $$\text{condition index} = \frac{weight}{length^3} \times 100$$
 #| label: transform-data-to-have-correct-units
 
 fish <- fish |>
+  
+  #Alter all of the length values to be in centimeter from millimeter
   mutate(length = length/10)
 
 ```
@@ -65,6 +65,8 @@ If you are struggling with the structure of your function, I would suggest readi
 
 replace_unlikely_values <- function(measurements, min_value, max_value) {
   
+  
+  #Determine if input values fit between the min and max values
   measurements <- ifelse(measurements < min_value | measurements > max_value, 
                          NA, 
                          measurements)
@@ -102,7 +104,7 @@ dataset and variable names as inputs)!
 
 condition_index <- function(weight, length) {
   
-  # Check for any zero or negative values (after removing NAs)
+  # Check for any zero or negative values, after removing NA observations
   if (any(weight <= 0 | length <= 0, na.rm = TRUE)) {
     stop("Weight and length must be positive values.")
   }
@@ -133,9 +135,8 @@ fish |>
     x = "Year",
     y = "",
     title = "Variation in Fish Condition Index of Various Species Over Time",
-    subtitle = "Condition Index",
-    color = "Species"
-  ) +
+    subtitle = "Condition Index"
+    ) +
   theme_bw()
 
 ```

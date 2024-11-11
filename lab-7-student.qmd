@@ -63,6 +63,7 @@ fish |>
                  names_to = "Variable", 
                  values_to = "Missing_Values") |>
   
+  # Determine the columns that have missing values. 
     filter(Missing_Values > 0)
 ```
 
@@ -73,13 +74,15 @@ fish |>
 
 fish |> 
   
+  #Make sure it is rows lacking wight data
   filter(is.na(weight)) |>
   
+  #Alter into a usable distincter variable
   mutate(trip = as.factor(trip)) |>
   
   group_by(year, section, trip) |>
   
-  summarise(Missing_Count = n(), .groups = 'drop') |>
+  summarise(Missing_Count = n(), .groups = "drop") |>
 
 
   ggplot(aes(x = section, y = Missing_Count, fill = trip)) +
