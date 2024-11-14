@@ -157,20 +157,17 @@ fish \<- fish \|\> mutate(length = (length - min(length, na.rm = TRUE)) / (max(l
 
 rescale_01 <- function(x) {
   
-  if (!is.numeric(x)) {
-    stop("Error: Input must be a numeric vector.")
-  }
+  case_when(!is.numeric(x) ~ "Error: Input must be a numeric vector.",
+            length(x) <= 1 ~ "Error: Input must have at least two elements."
+            ) 
   
-  # Check if input vector has more than one element
-  if (length(x) <= 1) {
-    stop("Error: Input vector must have a length greater than 1.")
-  }
-  
-  x =  (x - min(x, na.rm = TRUE)) / (max(x, na.rm = TRUE) - min(x, na.rm = TRUE))
+  x = (x - min(x, na.rm = TRUE)) / (max(x, na.rm = TRUE) - min(x, na.rm = TRUE))
   return(x)
 }
 
 ```
+
+**Reflection: As we are focusing on getting the process to be more efficient along with how we code, it was best to forgo the use of multiple if statements in favor of a single function that would preform the very same actions. When looking at my code, it is best to look deeper and determine if what I created could be compressed down to a form that is both more readable and would end up making the processing of R quicker.** 
 
 ::: callout-tip
 # Efficiency
@@ -264,6 +261,9 @@ If you are struggling with this task, I recommend looking back over the [data fr
 #| label: rescale-data-frame-function
 
 rescale_column <- function(df, columns) {
+  
+  #Added to check if the df is really a dataframe
+  stopifnot(is.data.frame(df))
  
   df <- df |> 
     mutate(across({{columns}}, rescale_01))
