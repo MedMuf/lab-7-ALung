@@ -67,14 +67,24 @@ replace_unlikely_values <- function(measurements, min_value, max_value) {
   
   
   #Determine if input values fit between the min and max values
-  case_when(!is.numeric(c(measurements, min_value, max_value) ~ )
-  measurements <- ifelse(measurements < min_value | measurements > max_value, 
-                         NA, 
-                         measurements)
+  if(!is.numeric(measurements) || !is.numeric(min_value) || !is.numeric(max_value)) {
+    stop("Inputs must be Numeric")
+  }
+                 
+  case_when(
+    measurements < min_value ~ NA_real_,
+    measurements > max_value ~ NA_real_)
   
   return(measurements)
   
+  
+  
+  
 }
+  
+  
+  
+
 
 ```
 
