@@ -68,17 +68,13 @@ replace_unlikely_values <- function(measurements, min_value, max_value) {
   
   #Determine if input values fit between the min and max values
   if(!is.numeric(measurements) || !is.numeric(min_value) || !is.numeric(max_value)) {
-    stop("Inputs must be Numeric")
+    stop("All inputs must be Numeric")
   }
                  
-  case_when(
-    measurements < min_value ~ NA_real_,
-    measurements > max_value ~ NA_real_)
-  
-  return(measurements)
-  
-  
-  
+  case_when(measurements < min_value ~ NA_real_,
+            measurements > max_value ~ NA_real_,
+            .default = measurements)
+
   
 }
   
@@ -87,6 +83,8 @@ replace_unlikely_values <- function(measurements, min_value, max_value) {
 
 
 ```
+
+**Reflection: Similar to lab 7, I learned that vectorizing the data would be much better for the dataset and process for R. I also should take to making sure that the inputs that I want to be inputed will be inputed. I added a numeric check for the inputs as if there is a value that is not an input, then the whole function would not work and if that is the case with no error in place, then nothing will be achieved that can be known.**
 
 **3. After consulting the [Montana Record Table](https://fwp.mt.gov/fish/anglingData/records) for the four species of trout included in these data, I have conjectured that it is unlikely to have measurements for fish below 5 cm and above 80 cm in length or below 10 g and above 4,000 g in weight. Use your function to modify the `length` and `weight` columns of the `fish` dataset based on my cutoffs.**
 
@@ -121,9 +119,11 @@ condition_index <- function(weight, length) {
   }
   
   # Calculate condition index 
-  return((weight / (length^3)) * 100000)
+  return((weight / (length^3)) * 100)
 }
 ```
+
+**Reflection: This was a case where I made a silly mistake. I accidentally left a few too many zeros when multiplying the ratio, which would be an issue in this case as this would greatly skew the results in the datasheet. I need to be more vigilant and look over my code more carefully as this is a mistake that I should not make.**
 
 **4. Make a thoughtful visualization of how fish conditions have varied over the duration of this study.**
 
@@ -138,16 +138,25 @@ condition_index <- function(weight, length) {
 
 
 fish |> 
-  mutate(condition = condition_index(weight, length)) |>
-  ggplot(aes(x = year, y = condition)) + 
-  geom_point(alpha = 0.25) +
-  facet_wrap(~ species) +
+  mutate(condition = condition_index(weight, length))|> 
+
+  ggplot(aes(y = condition, color = species)) + 
+  geom_boxplot(outliers = FALSE) + 
+  facet_wrap(~ year, ncol = 5) + 
   labs(
-    x = "Year",
+    x = "",
     y = "",
     title = "Variation in Fish Condition Index of Various Species Over Time",
-    subtitle = "Condition Index"
-    ) +
-  theme_bw()
+    subtitle = "Condition Index",
+    color = "Species"
+  ) +
+  scale_color_brewer(palette = "Set2") +
+  theme_bw() +
+    
+  theme(axis.title.x = element_blank(),
+        axis.text.x = element_blank(), 
+        axis.ticks.x = element_blank()
+        ) 
 
 ```
+**Reflection: The previous chart that I had was indeed not detailed enough and was not very readable as all the points laid at the bottom, with the only truly visible points being the outliers. The issue is that I used a points graph which did not tell very much, and so I switched to a box plot to show the true variability between all of the species and the years. I need to make sure not to settle for what I could understand (with context), but make sure that if someone who has no idea what they are looking at get a decent understanding of what the graph is trying to depict.** 
